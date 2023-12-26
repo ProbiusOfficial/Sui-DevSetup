@@ -1,0 +1,30 @@
+FROM ubuntu:20.04
+
+LABEL auther_template="HelloCTF-探姬"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list && \
+    sed -i 's@//.*security.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list
+
+# 安装必要的依赖
+RUN apt-get update && apt-get install -y curl git-all cmake gcc libssl-dev pkg-config libclang-dev libpq-dev build-essential
+
+
+# 安装 Rust 和 Cargo
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# 安装 Sui
+RUN cargo install --locked --git https://github.com/MystenLabs/sui.git --branch devnet sui
+
+# 清理缓存
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+
+WORKDIR /root
+
+# 当容器启动时默认执行的命令
+CMD [ "bash" ]
