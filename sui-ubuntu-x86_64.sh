@@ -33,4 +33,7 @@ sudo mv ./target/release/sui-ubuntu-x86_64 /sui/sui
 
 echo 'export PATH="/sui:$PATH"' >> $HOME/.bashrc
 
+rm -rf ./target
+rm -rf ./external-crates
+
 echo "Sui installation completed. Please run 'source $HOME/.bashrc' to update the PATH."
