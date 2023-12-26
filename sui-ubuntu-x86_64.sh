@@ -1,20 +1,25 @@
 #!/bin/bash
 
-# 使用参数指定的版本，如果未提供，则默认为 "mainnet-v1.15.1"
-RELEASE=${1:-"mainnet-v1.15.1"}
-FILENAME="sui-${RELEASE}-ubuntu-x86_64.tgz"
+# 默认版本
+DEFAULT_VERSION="v1.15.1"
 
-sudo apt-get update
-sudo apt-get install -y curl tar
+echo "默认安装版本：${DEFAULT_VERSION}"
+echo "如果需要安装其他版本，请在 https://github.com/MystenLabs/sui/releases/ 下载"
+echo "下载对应版本后，在压缩包所在目录重新运行此脚本。"
 
-if [ -f "$FILENAME" ]; then
-    echo "使用已下载的文件 $FILENAME"
-    tar xz -f $FILENAME
+PATTERN="sui-mainnet-*-ubuntu-x86_64.tgz"
+
+MATCHING_FILES=$(ls $PATTERN 2> /dev/null | head -n 1)
+
+if [ ! -z "$MATCHING_FILES" ]; then
+    echo "检测到文件 $MATCHING_FILES，将会使用此文件进行安装。"
+    tar xzf "$MATCHING_FILES"
 else
-    echo "Download $FILENAME"
-    if ! curl -L "https://github.com/MystenLabs/sui/releases/download/${RELEASE}/${FILENAME}" | tar xz; then
-        echo "下载失败，请检查网络连接后重试或手动下载：https://github.com/MystenLabs/sui/releases/"
-        echo "下载完成后，请将压缩包放置在脚本同级目录带上版本号重新运行脚本 .eg: ./sui-ubuntu-x86_64.sh mainnet-v1.15.1"
+    echo "未检测到文件，正在下载默认版本 ${DEFAULT_VERSION}。"
+    FILENAME="sui-mainnet-${DEFAULT_VERSION}-ubuntu-x86_64.tgz"
+    if ! curl -L "https://github.com/MystenLabs/sui/releases/download/mainnet-${DEFAULT_VERSION}/${FILENAME}" | tar xz; then
+        echo "下载失败，请检查网络连接或手动下载：https://github.com/MystenLabs/sui/releases/"
+        echo "下载完成后，请将压缩包放置在脚本同级目录并重新运行脚本。"
         exit 1
     fi
 fi
