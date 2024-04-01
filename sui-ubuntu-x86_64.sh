@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 默认版本
-DEFAULT_VERSION="v1.15.1"
+DEFAULT_VERSION="v1.21.1"
 
 echo "默认安装版本：${DEFAULT_VERSION}"
 echo "如果需要安装其他版本，请在 https://github.com/MystenLabs/sui/releases/ 下载"
